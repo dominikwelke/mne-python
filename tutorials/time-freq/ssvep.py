@@ -241,32 +241,30 @@ axes.set(title="PSD spectrum", xlabel='Frequency [Hz]',
 plt.xlim([0, fmax])
 fig.show()
 
-##############################################################################
-# SNR spectrum - trial average
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-fig, axes = plt.subplots(1, 1, sharex='all', sharey='all', dpi=300)
-# Average over trials
-axes.plot(freqs, snrs.mean(axis=0).T, color='b')
-# Average over trials and channels
-axes.plot(freqs, snrs.mean(axis=0).mean(axis=0), color='r')
-axes.set(title="SNR spectrum - trial average", xlabel='Frequency [Hz]',
-         ylabel='SNR', ylim=[0, 20])
-fig.show()
 
 ##############################################################################
-# SNR spectrum - channel average
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# SNR spectrum - averaged over trials
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-fig, axes = plt.subplots(1, 1, sharex='all', sharey='all', dpi=300)
-# Average over channels
-axes.plot(freqs, snr_spectrum(psds[:, :, :], 3, 1).mean(axis=1).T, color='b')
-# Average over trials and channels
-axes.plot(freqs, snr_spectrum(psds[:, :, :], 3, 1).mean(axis=0).mean(axis=0),
-          color='r')
-axes.set(title="SNR spectrum - channel average", xlabel='Frequency [Hz]',
-         ylabel='SNR', ylim=[0, 20])
-fig.show()
+plt.figure()
+plt.plot(freqs, snrs.mean(axis=0).T, color='grey', alpha=0.1)
+plt.axvline(x=stim_freq, ls=':')
+plt.plot(freqs, snrs.mean(axis=(0, 1)), color='r')
+plt.gca().set(title="SNR spectrum - averaged over trials", xlabel='Frequency [Hz]',
+              ylabel='SNR', ylim=[0, 20])
+plt.show()
+
+##############################################################################
+# SNR spectrum - averaged over channels
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+plt.figure()
+plt.semilogy(freqs, snrs.mean(axis=1).T, color='grey', alpha=0.1)
+plt.axvline(x=stim_freq, ls=':')
+plt.semilogy(freqs, snrs.mean(axis=(0, 1)), color='r')
+plt.gca().set(title="SNR spectrum - averaged over channels", xlabel='Frequency [Hz]',
+              ylabel='SNR', ylim=[0, 20])
+plt.show()
 
 ##############################################################################
 # SNR topography - grand average per channel
